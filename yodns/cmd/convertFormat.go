@@ -1,8 +1,8 @@
 package cmd
 
 import (
+	"github.com/DNS-MSMT-INET/yodns/resolver"
 	"github.com/spf13/cobra"
-	"gitlab.mpi-klsb.mpg.de/fsteurer/yodns/resolver"
 	"time"
 )
 

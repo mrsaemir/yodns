@@ -45,6 +45,9 @@ const (
 
 	// TagRad indicates that a domain originates from the radar popularity list.
 	TagRad = "rad"
+
+	// TagRescan indicates that a domain have been rescanned
+	TagRescan = "rescan"
 )
 
 // SourceTags are tags that indicate the origin/source of a domain name.

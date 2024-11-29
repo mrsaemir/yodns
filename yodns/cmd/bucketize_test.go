@@ -24,29 +24,6 @@ func Test_Key(t *testing.T) {
 	fmt.Println(fmt.Sprintf("%v", key))
 }
 
-func Test_CanAppendToBucket(t *testing.T) {
-	t.Skipf("skipping test")
-
-	writer, closeFunc, err := getFileWriter("test.zst", true)
-	if err != nil {
-		t.Error(err)
-		return
-	}
-
-	writer.Write([]byte("firstline\n"))
-	writer.Write([]byte("secondline\n"))
-	closeFunc()
-
-	writer, closeFunc, err = getFileWriterAppend("test.zst", true)
-	if err != nil {
-		t.Error(err)
-		return
-	}
-	writer.Write([]byte("thidline\n"))
-	writer.Write([]byte("fourthline\n"))
-	closeFunc()
-}
-
 func Test_DedupMap(t *testing.T) {
 
 	dedupMap := NewSyncMapCapacity[string, any](2)

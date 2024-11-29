@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/spf13/cobra"
-	"gitlab.mpi-klsb.mpg.de/fsteurer/yodns/resolver/serialization"
+	"github.com/DNS-MSMT-INET/yodns/resolver/serialization"
 	"golang.org/x/exp/slices"
 	"io"
 	"strings"

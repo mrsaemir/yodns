@@ -3,9 +3,9 @@ package cmd
 import (
 	"fmt"
 	"github.com/spf13/cobra"
-	"gitlab.mpi-klsb.mpg.de/fsteurer/yodns/resolver"
-	"gitlab.mpi-klsb.mpg.de/fsteurer/yodns/resolver/serialization"
-	"gitlab.mpi-klsb.mpg.de/fsteurer/yodns/resolver/serialization/json"
+	"github.com/DNS-MSMT-INET/yodns/resolver"
+	"github.com/DNS-MSMT-INET/yodns/resolver/serialization"
+	"github.com/DNS-MSMT-INET/yodns/resolver/serialization/json"
 	"os"
 	"path"
 	"time"

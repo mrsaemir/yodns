@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"github.com/rs/zerolog"
 	"github.com/spf13/cobra"
-	"gitlab.mpi-klsb.mpg.de/fsteurer/yodns/resolver/serialization"
+	"github.com/DNS-MSMT-INET/yodns/resolver/serialization"
 	"golang.org/x/exp/slices"
 	"golang.org/x/sync/errgroup"
 	"hash/fnv"
