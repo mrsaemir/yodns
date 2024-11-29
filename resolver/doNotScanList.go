@@ -3,7 +3,7 @@ package resolver
 import (
 	"encoding/csv"
 	"fmt"
-	"gitlab.mpi-klsb.mpg.de/fsteurer/yodns/resolver/model"
+	"github.com/DNS-MSMT-INET/yodns/resolver/model"
 	"io"
 	"net"
 	"net/netip"

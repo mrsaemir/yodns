@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"github.com/rs/zerolog"
-	"gitlab.mpi-klsb.mpg.de/fsteurer/yodns/resolver/common"
+	"github.com/DNS-MSMT-INET/yodns/resolver/common"
 	"golang.org/x/net/icmp"
 	"golang.org/x/net/ipv4"
 	"golang.org/x/net/ipv6"

@@ -3,7 +3,7 @@ package protobuf
 import (
 	"github.com/google/uuid"
 	"github.com/miekg/dns"
-	"gitlab.mpi-klsb.mpg.de/fsteurer/yodns/resolver/model"
+	"github.com/DNS-MSMT-INET/yodns/resolver/model"
 	"google.golang.org/protobuf/types/known/timestamppb"
 	"net/netip"
 	"time"

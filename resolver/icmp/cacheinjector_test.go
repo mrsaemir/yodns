@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/hex"
 	"fmt"
-	"gitlab.mpi-klsb.mpg.de/fsteurer/yodns/resolver/common"
+	"github.com/DNS-MSMT-INET/yodns/resolver/common"
 	"golang.org/x/net/icmp"
 	"net"
 	"testing"

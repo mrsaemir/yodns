@@ -1,7 +1,7 @@
 package resolver
 
 import (
-	"gitlab.mpi-klsb.mpg.de/fsteurer/yodns/resolver/model"
+	"github.com/DNS-MSMT-INET/yodns/resolver/model"
 	"golang.org/x/exp/slices"
 	"testing"
 )

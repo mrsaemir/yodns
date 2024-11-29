@@ -8,7 +8,7 @@ import (
 	"github.com/klauspost/compress/gzip"
 	"github.com/klauspost/compress/zip"
 	"github.com/klauspost/compress/zstd"
-	"gitlab.mpi-klsb.mpg.de/fsteurer/yodns/resolver/common"
+	"github.com/DNS-MSMT-INET/yodns/resolver/common"
 	"io"
 	"os"
 	"path"

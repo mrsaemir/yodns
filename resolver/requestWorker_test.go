@@ -2,10 +2,10 @@ package resolver
 
 import (
 	"github.com/enriquebris/goconcurrentqueue"
-	"gitlab.mpi-klsb.mpg.de/fsteurer/yodns/client"
-	"gitlab.mpi-klsb.mpg.de/fsteurer/yodns/client/builder"
-	"gitlab.mpi-klsb.mpg.de/fsteurer/yodns/resolver/common"
-	"gitlab.mpi-klsb.mpg.de/fsteurer/yodns/resolver/model"
+	"github.com/DNS-MSMT-INET/yodns/client"
+	"github.com/DNS-MSMT-INET/yodns/client/builder"
+	"github.com/DNS-MSMT-INET/yodns/resolver/common"
+	"github.com/DNS-MSMT-INET/yodns/resolver/model"
 	"net"
 	"net/netip"
 	"testing"

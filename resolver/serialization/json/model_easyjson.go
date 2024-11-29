@@ -7,7 +7,7 @@ import (
 	easyjson "github.com/mailru/easyjson"
 	jlexer "github.com/mailru/easyjson/jlexer"
 	jwriter "github.com/mailru/easyjson/jwriter"
-	model "gitlab.mpi-klsb.mpg.de/fsteurer/yodns/resolver/model"
+	model "github.com/DNS-MSMT-INET/yodns/resolver/model"
 	netip "net/netip"
 	time "time"
 )

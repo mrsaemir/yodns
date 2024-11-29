@@ -1,8 +1,8 @@
 package qmin
 
 import (
-	"gitlab.mpi-klsb.mpg.de/fsteurer/yodns/resolver"
-	"gitlab.mpi-klsb.mpg.de/fsteurer/yodns/resolver/model"
+	"github.com/DNS-MSMT-INET/yodns/resolver"
+	"github.com/DNS-MSMT-INET/yodns/resolver/model"
 )
 
 // Module is a collection of callbacks that can be used to extend the functionality of the resolver.

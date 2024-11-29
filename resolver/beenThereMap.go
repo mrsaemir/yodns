@@ -3,7 +3,7 @@ package resolver
 import (
 	"github.com/alphadose/haxmap"
 	"github.com/rs/zerolog"
-	"gitlab.mpi-klsb.mpg.de/fsteurer/yodns/resolver/model"
+	"github.com/DNS-MSMT-INET/yodns/resolver/model"
 	"net/netip"
 	"strconv"
 	"strings"

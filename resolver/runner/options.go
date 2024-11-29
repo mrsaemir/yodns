@@ -2,10 +2,10 @@ package runner
 
 import (
 	"fmt"
-	"gitlab.mpi-klsb.mpg.de/fsteurer/yodns/client"
-	"gitlab.mpi-klsb.mpg.de/fsteurer/yodns/resolver"
-	"gitlab.mpi-klsb.mpg.de/fsteurer/yodns/resolver/model"
-	qmin2 "gitlab.mpi-klsb.mpg.de/fsteurer/yodns/resolver/qmin"
+	"github.com/DNS-MSMT-INET/yodns/client"
+	"github.com/DNS-MSMT-INET/yodns/resolver"
+	"github.com/DNS-MSMT-INET/yodns/resolver/model"
+	qmin2 "github.com/DNS-MSMT-INET/yodns/resolver/qmin"
 	"math"
 	"strings"
 	"time"

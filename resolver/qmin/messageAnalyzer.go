@@ -2,8 +2,8 @@ package qmin
 
 import (
 	"github.com/miekg/dns"
-	"gitlab.mpi-klsb.mpg.de/fsteurer/yodns/resolver/common"
-	"gitlab.mpi-klsb.mpg.de/fsteurer/yodns/resolver/model"
+	"github.com/DNS-MSMT-INET/yodns/resolver/common"
+	"github.com/DNS-MSMT-INET/yodns/resolver/model"
 	"net/netip"
 )
 

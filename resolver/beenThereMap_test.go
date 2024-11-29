@@ -3,7 +3,7 @@ package resolver
 import (
 	"fmt"
 	"github.com/alphadose/haxmap"
-	"gitlab.mpi-klsb.mpg.de/fsteurer/yodns/resolver/model"
+	"github.com/DNS-MSMT-INET/yodns/resolver/model"
 	"net/netip"
 	"testing"
 )

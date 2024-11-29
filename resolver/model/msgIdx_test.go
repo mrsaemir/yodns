@@ -1,7 +1,7 @@
 package model
 
 import (
-	"gitlab.mpi-klsb.mpg.de/fsteurer/yodns/client"
+	"github.com/DNS-MSMT-INET/yodns/client"
 	"net/netip"
 	"reflect"
 	"testing"

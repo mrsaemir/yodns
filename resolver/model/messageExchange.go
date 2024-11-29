@@ -3,7 +3,7 @@ package model
 import (
 	"github.com/google/uuid"
 	"github.com/miekg/dns"
-	"gitlab.mpi-klsb.mpg.de/fsteurer/yodns/client"
+	"github.com/DNS-MSMT-INET/yodns/client"
 	"net/netip"
 	"time"
 )

@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/klauspost/compress/gzip"
 	"github.com/klauspost/compress/zstd"
-	"gitlab.mpi-klsb.mpg.de/fsteurer/yodns/resolver"
+	"github.com/DNS-MSMT-INET/yodns/resolver"
 	"io"
 	"os"
 	"path"
