@@ -6,7 +6,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/rs/zerolog"
-	"gitlab.mpi-klsb.mpg.de/fsteurer/yodns/client"
+	"github.com/DNS-MSMT-INET/yodns/client"
 	"golang.org/x/sync/semaphore"
 	"golang.org/x/time/rate"
 	"sync"

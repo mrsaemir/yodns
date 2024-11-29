@@ -2,7 +2,7 @@ package test
 
 import (
 	"github.com/google/uuid"
-	"gitlab.mpi-klsb.mpg.de/fsteurer/yodns/client"
+	"github.com/DNS-MSMT-INET/yodns/client"
 	"sync/atomic"
 )
 

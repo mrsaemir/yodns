@@ -3,8 +3,8 @@ package internal
 import (
 	"context"
 	"github.com/google/uuid"
-	"gitlab.mpi-klsb.mpg.de/fsteurer/yodns/client"
-	"gitlab.mpi-klsb.mpg.de/fsteurer/yodns/client/internal/test"
+	"github.com/DNS-MSMT-INET/yodns/client"
+	"github.com/DNS-MSMT-INET/yodns/client/internal/test"
 	"reflect"
 	"testing"
 	"time"

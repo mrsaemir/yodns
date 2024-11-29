@@ -2,7 +2,7 @@ package test
 
 import (
 	crand "crypto/rand"
-	"gitlab.mpi-klsb.mpg.de/fsteurer/yodns/client"
+	"github.com/DNS-MSMT-INET/yodns/client"
 	mrand "math/rand"
 	"net"
 )

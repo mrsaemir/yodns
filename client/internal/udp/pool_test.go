@@ -1,7 +1,7 @@
 package udp
 
 import (
-	"gitlab.mpi-klsb.mpg.de/fsteurer/yodns/client/internal/test"
+	"github.com/DNS-MSMT-INET/yodns/client/internal/test"
 	"net"
 	"testing"
 	"time"

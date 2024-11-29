@@ -2,10 +2,10 @@ package tcp
 
 import (
 	"errors"
+	"github.com/DNS-MSMT-INET/yodns/client"
+	"github.com/DNS-MSMT-INET/yodns/client/internal"
 	"github.com/google/uuid"
 	"github.com/miekg/dns"
-	"gitlab.mpi-klsb.mpg.de/fsteurer/yodns/client"
-	"gitlab.mpi-klsb.mpg.de/fsteurer/yodns/client/internal"
 	"math/rand"
 	"sync"
 	"sync/atomic"

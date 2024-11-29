@@ -2,8 +2,8 @@ package udp
 
 import (
 	"github.com/miekg/dns"
-	"gitlab.mpi-klsb.mpg.de/fsteurer/yodns/client"
-	"gitlab.mpi-klsb.mpg.de/fsteurer/yodns/client/internal"
+	"github.com/DNS-MSMT-INET/yodns/client"
+	"github.com/DNS-MSMT-INET/yodns/client/internal"
 	"sync"
 	"sync/atomic"
 	"time"

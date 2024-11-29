@@ -1,7 +1,7 @@
 package internal
 
 import (
-	"gitlab.mpi-klsb.mpg.de/fsteurer/yodns/client"
+	"github.com/DNS-MSMT-INET/yodns/client"
 	"testing"
 )
 

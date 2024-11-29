@@ -3,7 +3,6 @@ package internal
 import (
 	"crypto/rand"
 	"encoding/binary"
-	"gitlab.mpi-klsb.mpg.de/fsteurer/yodns/resolver/common"
 	"sync"
 	"time"
 )
@@ -104,5 +103,15 @@ func (gen *MessageIdGenerator) InflightIDs() []uint16 {
 	gen.mu.Lock()
 	defer gen.mu.Unlock()
 
-	return common.Keys(gen.idsInflight)
+	return keys(gen.idsInflight)
+}
+
+func keys[K comparable, V any](m map[K]V) []K {
+	keys := make([]K, len(m))
+	i := 0
+	for k := range m {
+		keys[i] = k
+		i++
+	}
+	return keys
 }

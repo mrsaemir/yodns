@@ -2,9 +2,9 @@ package internal
 
 import (
 	"fmt"
+	"github.com/DNS-MSMT-INET/yodns/client"
 	"github.com/google/uuid"
 	"github.com/miekg/dns"
-	"gitlab.mpi-klsb.mpg.de/fsteurer/yodns/client"
 	"time"
 )
 

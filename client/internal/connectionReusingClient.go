@@ -2,8 +2,8 @@ package internal
 
 import (
 	"context"
+	"github.com/DNS-MSMT-INET/yodns/client"
 	"github.com/google/uuid"
-	"gitlab.mpi-klsb.mpg.de/fsteurer/yodns/client"
 )
 
 var _ client.DNSClientDecorator = new(ConnectionReusingClient)
