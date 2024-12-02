@@ -1,11 +1,11 @@
 package json
 
 import (
-	"github.com/mailru/easyjson"
 	"github.com/DNS-MSMT-INET/yodns/resolver"
 	"github.com/DNS-MSMT-INET/yodns/resolver/common"
 	"github.com/DNS-MSMT-INET/yodns/resolver/model"
 	"github.com/DNS-MSMT-INET/yodns/resolver/serialization"
+	"github.com/mailru/easyjson"
 	"golang.org/x/sync/errgroup"
 	"io"
 	"sort"
@@ -59,7 +59,7 @@ func SerializeResult(result resolver.Result,
 	if _, err = writer.Write(bytes); err != nil {
 		return err
 	}
-	if _, err = writer.Write([]byte("\r\n")); err != nil {
+	if _, err = writer.Write([]byte("\n")); err != nil {
 		return err
 	}
 

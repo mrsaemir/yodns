@@ -2,12 +2,12 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/google/uuid"
-	"github.com/spf13/cobra"
 	"github.com/DNS-MSMT-INET/yodns/resolver"
 	"github.com/DNS-MSMT-INET/yodns/resolver/model"
 	"github.com/DNS-MSMT-INET/yodns/resolver/serialization"
 	"github.com/DNS-MSMT-INET/yodns/resolver/serialization/protobuf"
+	"github.com/google/uuid"
+	"github.com/spf13/cobra"
 	"sync"
 	"time"
 )
@@ -50,7 +50,6 @@ var Minify = &cobra.Command{
 			if err != nil {
 				panic(err)
 			}
-
 		}
 	},
 }
