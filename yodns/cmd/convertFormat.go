@@ -93,8 +93,6 @@ var ConvertFormat = &cobra.Command{
 			} else {
 				panic(fmt.Sprintf("unknown output format: %v", to))
 			}
-
-			break
 		}
 	},
 }
