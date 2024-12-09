@@ -2,12 +2,12 @@ package qmin
 
 import (
 	"fmt"
-	"github.com/miekg/dns"
-	"github.com/rs/zerolog"
 	"github.com/DNS-MSMT-INET/yodns/client"
 	"github.com/DNS-MSMT-INET/yodns/resolver"
 	"github.com/DNS-MSMT-INET/yodns/resolver/common"
 	"github.com/DNS-MSMT-INET/yodns/resolver/model"
+	"github.com/miekg/dns"
+	"github.com/rs/zerolog"
 )
 
 type Qmin struct {
@@ -163,7 +163,7 @@ func (s Qmin) OnResponse(job *resolver.ResolutionJob, msgEx model.MessageExchang
 	 * Why:		We don't want to miss any servers, even if they misbehave by not setting the AA bit.
 	 *          Therefore treat every response that is not clearly a zone cut as a potential authoritative answer.
 	 */
-	if isFullName && q.Type == dns.TypeNS && (!s.messageAnalyzer.IsOnlyReferralFor(msgEx.Message, q.Name) || cargs.zone.HasNameServer(ns)) {
+	if isFullName && q.Type == dns.TypeNS && (!s.messageAnalyzer.IsOnlyReferralFor(msgEx.Message, q.Name) || q.Name.Equal(cargs.zone.Name)) {
 		s.Modules.OnFullNameResolved(job, q.Name, cargs.zone)
 	}
 
