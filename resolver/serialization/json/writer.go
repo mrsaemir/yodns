@@ -20,7 +20,7 @@ type Writer struct {
 func NewWriter(outDir string, filePrefix string, outputFileSize uint, zipAlgo serialization.ZipAlgorithm, compression serialization.CompressionLevel, parallelFiles uint32) *Writer {
 	return &Writer{
 		FileWriterBase:     serialization.NewFileWriterBase(outDir, filePrefix, "json", outputFileSize, parallelFiles, true, zipAlgo, compression),
-		writeRecordsToZone: true,
+		writeRecordsToZone: false,
 	}
 }
 
