@@ -3,11 +3,11 @@ package cmd
 import (
 	"context"
 	"fmt"
-	"github.com/miekg/dns"
-	"github.com/spf13/cobra"
 	"github.com/DNS-MSMT-INET/yodns/resolver"
 	"github.com/DNS-MSMT-INET/yodns/resolver/model"
 	"github.com/DNS-MSMT-INET/yodns/resolver/serialization"
+	"github.com/miekg/dns"
+	"github.com/spf13/cobra"
 	"golang.org/x/exp/slices"
 	"os"
 	"path"
@@ -418,7 +418,7 @@ func init() {
 	Validate.Flags().String("in", "", "")
 	Validate.Flags().String("out", "", "")
 	Validate.Flags().String("format", "protobuf", "")
-	Validate.Flags().Bool("zip", false, "Zips the output")
+	Validate.Flags().String("zip", "", "Zips the output")
 	Validate.Flags().Bool("printnoerr", false, "Also prints the entries that have no errors")
 	Validate.Flags().StringSlice("domain", []string{}, "Filters the output by target domain name")
 	Validate.Flags().StringSlice("trustedTLDs", []string{}, "Top Level domains which are trusted")

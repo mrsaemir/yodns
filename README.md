@@ -16,6 +16,7 @@ You can build yodns by running the following commands
 > cd yodns; go build
 
 The [makefile](makefile) contains some useful example to get you started.
+You will need to install `make` and `parallel`.
 Running 
 
 > make my_experiment
@@ -67,10 +68,8 @@ It is a mixture of data-flows, structs, packages and more, so don't take it at f
 
 # Data Sets
 
-We share a dataset of X million domains name resolutions here.
+We share a dataset of 700 million domains name resolutions [here](https://doi.org/10.17617/3.UBPZXP).
 For a description of the data format, see [Data Format](#data-format)
-
-TODO some instructions
 
 # Data Format
 

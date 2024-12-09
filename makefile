@@ -5,6 +5,7 @@ configDir=config
 experiment = my_experiment
 scanDataDir = data
 exampleDataDir = data
+jobs = 4
 
 build:
 	cd yodns; go build
@@ -21,9 +22,9 @@ my_experiment: build
 	# ---------------------------------------------------------------------------------
 	# -- THIS IS A MINIMAL RUN CONFIGURATION AND NOT INTENDED FOR LARGE SCALE SCANS! --
 	# ---------------------------------------------------------------------------------
-	cd ${scanDataDir}; cat ${CURDIR}/${scanDataDir}/config/targets_local.csv | ${CURDIR}/yodns/yodns scan --config=${CURDIR}/${scanDataDir}/config/runconfig.json5
+	cd ${scanDataDir}; cat ${CURDIR}/${scanDataDir}/config/targets_local.csv | ${CURDIR}/yodns/yodns scan --config=${CURDIR}/${scanDataDir}/config/runconfig.json5 --ipv4-only
 	# Validate the output [optional]
-	find ${scanDataDir}/data -type f -name 'output_*.zst' | parallel --jobs ${jobs} --plus ${CURDIR}/yodns/yodns validate --in={} --out=${scanDataDir}/validate/{/..}.json.zst --zip --printnoerr
+	find ${scanDataDir}/data -type f -name 'output_*.zst' | parallel --jobs ${jobs} --plus ${CURDIR}/yodns/yodns validate --in={} --out=${scanDataDir}/validate/{/..}.json.zst --zip "zst" --printnoerr
 	# Count the number of zone dependencies
 	find ${scanDataDir}/data -type f -name 'output_*.zst' | parallel --jobs ${jobs} --plus ${CURDIR}/yodns/yodns zoneDependencies --in={} --out=${scanDataDir}/zoneDeps/{/..}.csv --print-header=0
 	# Each resolution contains all the zones necessary for that resolution -
