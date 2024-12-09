@@ -3,11 +3,11 @@ package cache
 import (
 	"context"
 	"encoding/gob"
-	"github.com/miekg/dns"
 	"github.com/DNS-MSMT-INET/yodns/resolver"
 	"github.com/DNS-MSMT-INET/yodns/resolver/common"
 	"github.com/DNS-MSMT-INET/yodns/resolver/model"
 	"github.com/DNS-MSMT-INET/yodns/resolver/serialization/protobuf"
+	"github.com/miekg/dns"
 	"google.golang.org/protobuf/proto"
 	"io"
 	"math"
@@ -51,7 +51,7 @@ import (
 //     caching server, where the TTLs for some but not all the RRs in the
 //     RRSet have expired.
 //     Consequently, the use of differing TTLs in an RRSet is hereby
-//     deprecated, the TTLs of all RRs in an RRSet must be the same.
+//     de-pre-cated, the TTLs of all RRs in an RRSet must be the same.
 //     Should a client receive a response containing [...] the
 //     client should treat the RRs for all purposes as if all TTLs in the
 //     RRSet had been set to the value of the lowest TTL in the RRSet. In
