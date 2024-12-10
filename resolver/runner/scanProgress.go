@@ -12,7 +12,7 @@ import (
 // ScanProgress is a utility type that tracks which domains are currently being resolved.
 // on crash, it helps to determine from where the scanning should resume.
 type ScanProgress struct {
-	TrackFinished chan uint
+	trackFinished chan uint
 	Count         uint
 	Log           zerolog.Logger
 	Missing       map[uint]any
@@ -54,6 +54,18 @@ func (p *ScanProgress) Load(in io.Reader) {
 	p.isLoaded = true
 }
 
+func (p *ScanProgress) TrackFinished(idx uint) {
+	if p.trackFinished != nil {
+		p.trackFinished <- idx
+	}
+}
+
+func (p *ScanProgress) Close() {
+	if p.trackFinished != nil {
+		close(p.trackFinished)
+	}
+}
+
 func (p *ScanProgress) CanSkip(idx uint) bool {
 	if !p.isLoaded {
 		return false
@@ -70,7 +82,8 @@ func (p *ScanProgress) CanSkip(idx uint) bool {
 }
 
 func (p *ScanProgress) WriteWorker(out io.Writer) {
-	for idx := range p.TrackFinished {
+	p.trackFinished = make(chan uint, 1000)
+	for idx := range p.trackFinished {
 		_, err := out.Write([]byte(fmt.Sprintf("%d\n", idx)))
 		if err != nil {
 			p.Log.Err(err).Msg("failed to write to scan progress file. Exiting worker...")

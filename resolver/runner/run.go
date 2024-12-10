@@ -7,9 +7,6 @@ import (
 	"crypto/subtle"
 	"encoding/hex"
 	"fmt"
-	"github.com/klauspost/compress/zstd"
-	"github.com/rs/zerolog"
-	"github.com/rs/zerolog/log"
 	"github.com/DNS-MSMT-INET/yodns/client"
 	"github.com/DNS-MSMT-INET/yodns/client/builder"
 	"github.com/DNS-MSMT-INET/yodns/resolver"
@@ -22,6 +19,9 @@ import (
 	"github.com/DNS-MSMT-INET/yodns/resolver/serialization/input"
 	"github.com/DNS-MSMT-INET/yodns/resolver/serialization/json"
 	"github.com/DNS-MSMT-INET/yodns/resolver/serialization/protobuf"
+	"github.com/klauspost/compress/zstd"
+	"github.com/rs/zerolog"
+	"github.com/rs/zerolog/log"
 	"golang.org/x/sync/semaphore"
 	"io"
 	"net"
@@ -265,8 +265,7 @@ func Run(c context.Context, opts Options) {
 	}
 
 	pd := ScanProgress{
-		Log:           log,
-		TrackFinished: make(chan uint, 1000),
+		Log: log,
 	}
 	pdFlush := func() {}
 	if opts.ProgressDumpFile != "" {
@@ -287,7 +286,8 @@ func Run(c context.Context, opts Options) {
 			writer.Flush()
 			progressFile.Close()
 		}
-		defer close(pd.TrackFinished)
+
+		defer pd.Close()
 		defer pdFlush()
 	}
 
@@ -556,7 +556,7 @@ func resolveRecords(ctx common.Context, opts Options, resv resolver.Resolver, pm
 					domainsInflightSem.Release(int64(len(batchNames)))
 					batchesInflightSem.Release(1)
 					for _, n := range batchNames {
-						pm.TrackFinished <- n.Idx
+						pm.TrackFinished(n.Idx)
 					}
 				}()
 
@@ -727,9 +727,9 @@ func initInputter(opts Options, log zerolog.Logger) Inputter {
 func initDoNotScanList(ctx context.Context, filepath string, log zerolog.Logger, reloadInterval time.Duration) {
 	if err := resolver.DoNotScanList.FromFile(filepath); err != nil {
 		log.Panic(). // Stop execution. Don't start scanning without respecting the do not scan list.
-				Err(err).
-				Str("filePath", filepath).
-				Msgf("Error opening do-not-scan list. The system cannot find the file %v.", filepath)
+			Err(err).
+			Str("filePath", filepath).
+			Msgf("Error opening do-not-scan list. The system cannot find the file %v.", filepath)
 	}
 
 	go func() {
