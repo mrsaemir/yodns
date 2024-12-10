@@ -3,14 +3,14 @@ package cmd
 import (
 	"context"
 	"fmt"
-	"github.com/ilibs/json5"
-	"github.com/nightlyone/lockfile"
-	"github.com/spf13/cobra"
-	"github.com/spf13/pflag"
 	"github.com/DNS-MSMT-INET/yodns/resolver"
 	"github.com/DNS-MSMT-INET/yodns/resolver/common"
 	"github.com/DNS-MSMT-INET/yodns/resolver/model"
 	"github.com/DNS-MSMT-INET/yodns/resolver/runner"
+	"github.com/ilibs/json5"
+	"github.com/nightlyone/lockfile"
+	"github.com/spf13/cobra"
+	"github.com/spf13/pflag"
 	"net/http"
 	_ "net/http/pprof"
 	"os"
@@ -34,6 +34,7 @@ var Scan = &cobra.Command{
 		maxMem, _ := cmd.Flags().GetInt64("maxMem")
 		disableMetrics, _ := cmd.Flags().GetBool("disable-metrics")
 		prependWWW, _ := cmd.Flags().GetBool("prepend-www")
+		enablePprof, _ := cmd.Flags().GetBool("enable-pprof")
 		lockfilePath, _ := cmd.Flags().GetString("lockfile")
 		if lockfilePath != "" {
 			absPath, err := filepath.Abs(lockfilePath)
@@ -53,7 +54,9 @@ var Scan = &cobra.Command{
 			defer lf.Unlock()
 		}
 
-		go func() { _ = http.ListenAndServe("localhost:8081", nil) }()
+		if enablePprof {
+			go func() { _ = http.ListenAndServe("localhost:8081", nil) }()
+		}
 
 		if cpuProfilePath != "" {
 			cpuFile, err := os.Create(cpuProfilePath)
@@ -177,7 +180,8 @@ func defineFlags(flags *pflag.FlagSet, options *runner.Options) {
 	flags.Int64("maxMem", -1, "Sets the maximum number memory to use in GB (soft limit)")
 
 	flags.String("lockfile", "", "Path to a lockfile. Program MUST obtain a lock on startup, otherwise it will exit. No value means no lockfile.")
-	flags.Bool("disable-metrics", true, "If true, metric endpoint will be disabled.")
+	flags.Bool("disable-metrics", false, "If true, metric endpoint will be disabled.")
+	flags.Bool("enable-pprof", false, "If true, the tool will provide a pprof endpoint for profiling at localhost:8081")
 	flags.Bool("prepend-www", false, "If true, prepend the second level domain with a www. prefix and adds it to the target list before the resolution is happening.")
 
 	// Continuation options
