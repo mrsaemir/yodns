@@ -4,8 +4,8 @@ import (
 	"bufio"
 	"encoding/json"
 	"fmt"
-	"github.com/spf13/cobra"
 	"github.com/DNS-MSMT-INET/yodns/resolver/serialization"
+	"github.com/spf13/cobra"
 	"golang.org/x/exp/slices"
 	"io"
 	"strings"
@@ -66,9 +66,12 @@ var dedup = &cobra.Command{
 			}
 
 			var nextTags string
-			err = json.Unmarshal(nextObj["tags"], &nextTags)
-			if err != nil {
-				panic(err)
+			if _, ok := nextObj["tags"]; ok {
+				err = json.Unmarshal(nextObj["tags"], &nextTags)
+				if err != nil {
+					panic(err)
+				}
+
 			}
 
 			if len(lastKeys) == 0 {
@@ -95,7 +98,10 @@ var dedup = &cobra.Command{
 				panic(err)
 			}
 
-			lastObj["tags"] = b
+			if _, ok := lastObj["tags"]; ok {
+				lastObj["tags"] = b
+			}
+
 			writeToLine(lastObj, writer)
 
 			lastObj = nextObj
@@ -109,7 +115,9 @@ var dedup = &cobra.Command{
 				panic(err)
 			}
 
-			lastObj["tags"] = b
+			if _, ok := lastObj["tags"]; ok {
+				lastObj["tags"] = b
+			}
 			writeToLine(lastObj, writer)
 		}
 	},
