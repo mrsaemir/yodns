@@ -2,13 +2,15 @@ package runner
 
 import (
 	"fmt"
-	"github.com/DNS-MSMT-INET/yodns/client"
-	"github.com/DNS-MSMT-INET/yodns/resolver"
-	"github.com/DNS-MSMT-INET/yodns/resolver/model"
-	qmin2 "github.com/DNS-MSMT-INET/yodns/resolver/qmin"
 	"math"
 	"strings"
 	"time"
+
+	"github.com/DNS-MSMT-INET/yodns/client"
+	"github.com/DNS-MSMT-INET/yodns/resolver"
+	"github.com/DNS-MSMT-INET/yodns/resolver/model"
+	"github.com/DNS-MSMT-INET/yodns/resolver/strategy/common"
+	qmin2 "github.com/DNS-MSMT-INET/yodns/resolver/strategy/qmin"
 )
 
 type Options struct {
@@ -515,7 +517,7 @@ func (opts Options) UDPTimeout() time.Duration {
 	return time.Millisecond * time.Duration(opts.UDP.TimeoutInMs)
 }
 
-func (opts Options) InitModules() (result []qmin2.Module) {
+func (opts Options) InitModules() (result []common.Module) {
 	// We always add this module
 	result = append(result, qmin2.QTModule(
 		opts.QueryFor.OnFullNameResolved,

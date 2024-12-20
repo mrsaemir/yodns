@@ -1,10 +1,11 @@
-package qmin
+package common
 
 import (
-	"github.com/miekg/dns"
+	"net/netip"
+
 	"github.com/DNS-MSMT-INET/yodns/resolver/common"
 	"github.com/DNS-MSMT-INET/yodns/resolver/model"
-	"net/netip"
+	"github.com/miekg/dns"
 )
 
 // Referral
@@ -25,18 +26,16 @@ type Referral struct {
 	FromAnswer bool
 }
 
-type cname struct {
-	origin model.DomainName
-	target model.DomainName
+type CName struct {
+	Origin model.DomainName
+	Target model.DomainName
 
 	// The name server can optionally provide records together with the cname to shorten the resolution path.
 	// Such records are stored here.
-	records []dns.RR
+	Records []dns.RR
 }
 
-var _ MessageAnalyzer = new(QminMessageAnalyzer)
-
-type QminMessageAnalyzer struct{}
+type MessageAnalyzer struct{}
 
 // IsGlueMissing returns true if the referral should contain required glue
 func (r Referral) IsGlueMissing() bool {
@@ -44,7 +43,7 @@ func (r Referral) IsGlueMissing() bool {
 }
 
 // IsOnlyReferralFor returns true if the msg contains ONLY a referral for the given name.
-func (QminMessageAnalyzer) IsOnlyReferralFor(msg *dns.Msg, name model.DomainName) bool {
+func (MessageAnalyzer) IsOnlyReferralFor(msg *dns.Msg, name model.DomainName) bool {
 	// From rfc8499
 	// A response that has only a referral contains an empty answer
 	// section.  It contains the NS RRset for the referred-to zone in the
@@ -74,7 +73,7 @@ func (QminMessageAnalyzer) IsOnlyReferralFor(msg *dns.Msg, name model.DomainName
 }
 
 // IsOnlyReferral returns true if the msg contains ONLY a referral.
-func (QminMessageAnalyzer) IsOnlyReferral(msg *dns.Msg) bool {
+func (MessageAnalyzer) IsOnlyReferral(msg *dns.Msg) bool {
 	// From rfc8499
 	// A response that has only a referral contains an empty answer
 	// section.  It contains the NS RRset for the referred-to zone in the
@@ -104,7 +103,7 @@ func (QminMessageAnalyzer) IsOnlyReferral(msg *dns.Msg) bool {
 	return false
 }
 
-func (QminMessageAnalyzer) GetReferrals(msg *dns.Msg, qtype uint16) []Referral {
+func (MessageAnalyzer) GetReferrals(msg *dns.Msg, qtype uint16) []Referral {
 	if msg == nil {
 		return nil
 	}
@@ -165,12 +164,12 @@ func newReferral(nsRecord *dns.NS, glueIdx map[model.DomainName][]netip.Addr, fr
 	}, nil
 }
 
-func (QminMessageAnalyzer) GetCNAMES(msg *dns.Msg) []cname {
+func (MessageAnalyzer) GetCNAMES(msg *dns.Msg) []CName {
 	if msg == nil {
 		return nil
 	}
 
-	var response []cname
+	var response []CName
 	for _, cnameRecord := range msg.Answer {
 		cnameRec, isCname := cnameRecord.(*dns.CNAME)
 		if !isCname {
@@ -187,10 +186,10 @@ func (QminMessageAnalyzer) GetCNAMES(msg *dns.Msg) []cname {
 			continue
 		}
 
-		response = append(response, cname{
-			origin: name,
-			target: val,
-			records: common.Filter(msg.Answer, func(rr dns.RR) bool {
+		response = append(response, CName{
+			Origin: name,
+			Target: val,
+			Records: common.Filter(msg.Answer, func(rr dns.RR) bool {
 				return val.EqualString(rr.Header().Name)
 			}),
 		})

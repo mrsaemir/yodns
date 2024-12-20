@@ -1,17 +1,18 @@
 package resolver
 
 import (
+	"math"
+	"net/netip"
+	"sync"
+	"time"
+
+	"github.com/DNS-MSMT-INET/yodns/resolver/common"
+	"github.com/DNS-MSMT-INET/yodns/resolver/model"
 	"github.com/alphadose/haxmap"
 	"github.com/enriquebris/goconcurrentqueue"
 	"github.com/miekg/dns"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/rs/zerolog"
-	"github.com/DNS-MSMT-INET/yodns/resolver/common"
-	"github.com/DNS-MSMT-INET/yodns/resolver/model"
-	"math"
-	"net/netip"
-	"sync"
-	"time"
 )
 
 type TaggedDomainName struct {
@@ -527,6 +528,14 @@ type EnqueueOpts struct {
 
 	Print bool
 }
+
+func (job *ResolutionJob) EnqueueRequestForSingleFutureNameServerAndIp(
+	zone *model.Zone,
+	question model.Question,
+	carryOverArgs any,
+	opts EnqueueOpts) {
+		// TODO: Implement me!
+	}
 
 func (job *ResolutionJob) EnqueueRequestForFutureNameServersAndIps(
 	zone *model.Zone,

@@ -1,4 +1,4 @@
-package qmin
+package common
 
 import (
 	"github.com/DNS-MSMT-INET/yodns/resolver"

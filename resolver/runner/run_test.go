@@ -2,11 +2,6 @@ package runner
 
 import (
 	"bytes"
-	"github.com/rs/zerolog"
-	"github.com/DNS-MSMT-INET/yodns/resolver"
-	"github.com/DNS-MSMT-INET/yodns/resolver/common"
-	"github.com/DNS-MSMT-INET/yodns/resolver/model"
-	"github.com/DNS-MSMT-INET/yodns/resolver/qmin"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -14,6 +9,12 @@ import (
 	"strconv"
 	"testing"
 	"time"
+
+	"github.com/DNS-MSMT-INET/yodns/resolver"
+	"github.com/DNS-MSMT-INET/yodns/resolver/common"
+	"github.com/DNS-MSMT-INET/yodns/resolver/model"
+	"github.com/DNS-MSMT-INET/yodns/resolver/strategy/qmin"
+	"github.com/rs/zerolog"
 )
 
 func TestRun_CanCancel(t *testing.T) {

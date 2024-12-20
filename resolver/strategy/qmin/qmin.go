@@ -2,9 +2,12 @@ package qmin
 
 import (
 	"fmt"
+
 	"github.com/DNS-MSMT-INET/yodns/client"
 	"github.com/DNS-MSMT-INET/yodns/resolver"
-	"github.com/DNS-MSMT-INET/yodns/resolver/common"
+	commonUtils "github.com/DNS-MSMT-INET/yodns/resolver/common"
+	"github.com/DNS-MSMT-INET/yodns/resolver/strategy/common"
+
 	"github.com/DNS-MSMT-INET/yodns/resolver/model"
 	"github.com/miekg/dns"
 	"github.com/rs/zerolog"
@@ -23,7 +26,7 @@ type Qmin struct {
 	// trustedNameserverCount is the number of servers that will be queried when a zone is deemed "trusted"
 	trustedNameserverCount int
 
-	Modules ModuleCollection
+	Modules common.ModuleCollection
 
 	messageAnalyzer MessageAnalyzer
 }
@@ -33,8 +36,8 @@ type Qmin struct {
 // although modules will be the better choice for most use cases.
 // But the main reason for its existence is, that it greatly increases unit testability.
 type MessageAnalyzer interface {
-	GetReferrals(msg *dns.Msg, qtype uint16) []Referral
-	GetCNAMES(msg *dns.Msg) []cname
+	GetReferrals(msg *dns.Msg, qtype uint16) []common.Referral
+	GetCNAMES(msg *dns.Msg) []common.CName
 	IsOnlyReferralFor(msg *dns.Msg, name model.DomainName) bool
 	IsOnlyReferral(msg *dns.Msg) bool
 }
@@ -50,7 +53,7 @@ func (c carryOverArgsQmin) String() string {
 
 func New() Qmin {
 	return Qmin{
-		messageAnalyzer:        QminMessageAnalyzer{},
+		messageAnalyzer:        common.MessageAnalyzer{},
 		trustedNameserverCount: 1,
 	}
 }
@@ -79,7 +82,7 @@ func (s Qmin) TrustedNameserverCount(count int) Qmin {
 	return s
 }
 
-func (s Qmin) AddModule(modules ...Module) Qmin {
+func (s Qmin) AddModule(modules ...common.Module) Qmin {
 	s.Modules = append(s.Modules, modules...)
 	return s
 }
@@ -108,7 +111,7 @@ func (s Qmin) OnStartResolveName(job *resolver.ResolutionJob, sname model.Domain
 	}
 
 	log.Debug().Msgf("Start resolving name %v from %v", sname, closestEncloser)
-	child := sname.GetAncestor(common.MinInt(closestEncloser.GetLabelCount()+1, sname.GetLabelCount()))
+	child := sname.GetAncestor(commonUtils.MinInt(closestEncloser.GetLabelCount()+1, sname.GetLabelCount()))
 
 	job.EnqueueRequestForFutureNameServersAndIps(zone, model.Ask(child, client.TypeNS),
 		carryOverArgsQmin{
@@ -174,7 +177,7 @@ func (s Qmin) OnResponse(job *resolver.ResolutionJob, msgEx model.MessageExchang
 	 */
 	if cnames := s.messageAnalyzer.GetCNAMES(dnsMsg); len(cnames) > 0 {
 		for _, cname := range cnames {
-			job.ResolveCName(cname.origin, cname.target)
+			job.ResolveCName(cname.Origin, cname.Target)
 		}
 	}
 
@@ -223,7 +226,7 @@ func (s Qmin) OnResponse(job *resolver.ResolutionJob, msgEx model.MessageExchang
 
 func (s Qmin) updateZoneModel(job *resolver.ResolutionJob,
 	qName model.DomainName,
-	referrals []Referral,
+	referrals []common.Referral,
 	zone *model.Zone,
 	log zerolog.Logger) map[*model.Zone]any {
 
@@ -283,7 +286,7 @@ func (s Qmin) updateZoneModel(job *resolver.ResolutionJob,
 
 var typesToAskOnBogus = []uint16{client.TypeSOA, client.TypeNS, client.TypeA, client.TypeAAAA, client.TypeTXT, client.TypeDNSKEY, client.TypeDS, client.TypeMX}
 
-func onBogusReferral(job *resolver.ResolutionJob, referral Referral, zone *model.Zone) {
+func onBogusReferral(job *resolver.ResolutionJob, referral common.Referral, zone *model.Zone) {
 	// Make sure we resolve the zone name directly - so we can later compare the real NS with the NSes in the bogus referral
 	job.ResolveName(referral.ZoneName)
 
@@ -316,7 +319,7 @@ func onBogusReferral(job *resolver.ResolutionJob, referral Referral, zone *model
 }
 
 func (s Qmin) followReferrals(job *resolver.ResolutionJob,
-	referrals []Referral,
+	referrals []common.Referral,
 	referredToZones map[*model.Zone]any,
 	q model.Question,
 	cargs carryOverArgsQmin) {

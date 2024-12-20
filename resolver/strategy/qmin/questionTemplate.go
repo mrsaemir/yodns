@@ -1,9 +1,11 @@
 package qmin
 
 import (
+	"strings"
+
 	"github.com/DNS-MSMT-INET/yodns/resolver"
 	"github.com/DNS-MSMT-INET/yodns/resolver/model"
-	"strings"
+	"github.com/DNS-MSMT-INET/yodns/resolver/strategy/common"
 )
 
 const (
@@ -28,9 +30,9 @@ type QuestionTemplate struct {
 
 func QTModule(
 	onFullNameResolved []QuestionTemplate,
-	onZoneCreated []QuestionTemplate) Module {
+	onZoneCreated []QuestionTemplate) common.Module {
 
-	return Module{
+	return common.Module{
 		OnFullNameResolved: func(job *resolver.ResolutionJob, name model.DomainName, zone *model.Zone) {
 			for _, qt := range onFullNameResolved {
 				q, err := qt.ToQuestion(name, zone.Name)
