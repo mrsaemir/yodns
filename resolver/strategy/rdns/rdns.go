@@ -105,6 +105,9 @@ func (s RDNS) followReferrals(
 		zones = append(zones, zone)
 	}
 
+	// TODO: Handle cases where the required glue (for the NS) is missing. Ask the referring server for the IPs.
+	// this issue gets worse when retrying. Refer to qmin.followReferrals for more info.
+
 	// These requests are actually advancing the resolution
 	for _, name := range job.GetNamesBelow(q.Name) {		
 		zone := zones[0] // TODO: pick randomly?
