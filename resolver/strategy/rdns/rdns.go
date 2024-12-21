@@ -23,10 +23,8 @@ func (s RDNS) AddModule(modules ...common.Module) RDNS {
 }
 
 func (s RDNS) OnInit(job *resolver.ResolutionJob) {
-	ns := pickNameServer(job.Root.GetNameServers())
-	job.EnqueueRequest(
-		ns,
-		model.Ask(".", client.TypeNS),
+	EnqueueRequestForSingleNameServer(
+		job, job.Root, model.Ask(".", client.TypeNS),
 		common.CarryOverArgs{
 			Zone: job.Root,
 		},
@@ -37,10 +35,8 @@ func (s RDNS) OnInit(job *resolver.ResolutionJob) {
 func (s RDNS) OnStartResolveName(job *resolver.ResolutionJob, sname model.DomainName) {
 	zone, closestEncloser := job.GetClosestEncloser(sname)
 	child := sname.GetAncestor(commonUtils.MinInt(closestEncloser.GetLabelCount()+1, sname.GetLabelCount()))
-	ns := pickNameServer(zone.GetNameServers())
-	job.EnqueueRequest(
-		ns,
-		model.Ask(child, client.TypeNS),
+	EnqueueRequestForSingleNameServer(
+		job, zone, model.Ask(child, client.TypeNS),
 		common.CarryOverArgs{
 			Zone: zone,
 		},
@@ -126,8 +122,8 @@ func (s RDNS) OnResponse(job *resolver.ResolutionJob, msgEx model.MessageExchang
 				nextCargs := cargs
 
 				nextCargs.Zone = job.Root.GetClosestEnclosingZone(nextQName)
-				job.EnqueueRequestForSingleFutureNameServerAndIp(
-					nextCargs.Zone, model.Ask(nextQName, client.TypeNS), nextCargs, resolver.EnqueueOpts{})
+				EnqueueRequestForSingleNameServer(
+					job, nextCargs.Zone, model.Ask(nextQName, client.TypeNS), nextCargs, resolver.EnqueueOpts{})
 			}
 	}
 }

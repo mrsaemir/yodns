@@ -529,14 +529,6 @@ type EnqueueOpts struct {
 	Print bool
 }
 
-func (job *ResolutionJob) EnqueueRequestForSingleFutureNameServerAndIp(
-	zone *model.Zone,
-	question model.Question,
-	carryOverArgs any,
-	opts EnqueueOpts) {
-		// TODO: Implement me!
-	}
-
 func (job *ResolutionJob) EnqueueRequestForFutureNameServersAndIps(
 	zone *model.Zone,
 	question model.Question,
@@ -754,6 +746,38 @@ func (job *ResolutionJob) receiveWorker(ctx common.Context) {
 			job.openRequests.Done()
 		}
 	}
+}
+
+func (job *ResolutionJob) PickRandomNameServer(
+	nameservers []*model.NameServer,
+	qestion model.Question,
+	opts EnqueueOpts,
+) *model.NameServer {
+	// TODO: pick the NS with an ip that is not already used 
+	// for the same request, randomly.
+	if len(nameservers) == 0 {
+		return nil
+	}
+	return nameservers[0]
+}
+
+func (job *ResolutionJob) PickRandomIpAddr(
+	ips []netip.Addr,
+	question model.Question,
+	opts EnqueueOpts,
+) *netip.Addr {
+	if len(ips) == 0 {
+		return nil
+	}
+
+	for _, ip := range filterIps(ips, job.settings.UseV4, job.settings.UseV6) {
+		if !opts.SkipBeenThere && job.beenThereMap.exists(ip, question.Type, question.Class, question.Name) {
+			continue
+		}
+		return &ip
+	}
+
+	return nil
 }
 
 func filterIps(ipAddresses []netip.Addr, useIPV4 bool, useIPV6 bool) (result []netip.Addr) {

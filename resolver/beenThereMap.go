@@ -1,12 +1,13 @@
 package resolver
 
 import (
-	"github.com/alphadose/haxmap"
-	"github.com/rs/zerolog"
-	"github.com/DNS-MSMT-INET/yodns/resolver/model"
 	"net/netip"
 	"strconv"
 	"strings"
+
+	"github.com/DNS-MSMT-INET/yodns/resolver/model"
+	"github.com/alphadose/haxmap"
+	"github.com/rs/zerolog"
 )
 
 // The beenThereMap prevents loops. At each step, when a nameserver is queried, it is added to the beenthere set.
@@ -39,6 +40,11 @@ func (beenThereMap *beenThereMap) track(nsIP netip.Addr, qType uint16, qClass ui
 	}
 
 	return wasLoaded // If it was loaded, that means it was already stored (aka we have been there)
+}
+
+func (beenThereMap *beenThereMap) exists(nsIP netip.Addr, qType uint16, qClass uint16, qName model.DomainName) bool {
+	_, exists := beenThereMap.innerMap.Get(getKey(nsIP, qType, qClass, qName))
+	return exists
 }
 
 func getKey(nsIp netip.Addr, qType uint16, qClass uint16, qname model.DomainName) string {
