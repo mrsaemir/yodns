@@ -56,8 +56,8 @@ func (zone *Zone) OnNameServerAdded(key any, callback func(ns *NameServer)) {
 
 func (zone *Zone) OnNameServerAddedOnce(key any, callback func(ns *NameServer)){
 	zone.onNameServerAdded[key] = func(ns *NameServer) {
-		callback(ns)
 		delete(zone.onNameServerAdded, key)
+		callback(ns)
 	}
 }
 

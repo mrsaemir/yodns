@@ -1,6 +1,8 @@
 package rdns
 
 import (
+	"net/netip"
+
 	"github.com/DNS-MSMT-INET/yodns/resolver"
 	"github.com/DNS-MSMT-INET/yodns/resolver/model"
 )
@@ -19,7 +21,14 @@ func EnqueueRequestForSingleIp(
 		opts,
 	)
 	if ip == nil {
-		panic("Schedule for future ips.")
+		ns.OnIPAddedOnce(
+			question,
+			func(ip netip.Addr) {
+				job.EnqueueRequestIP(
+					ns, ip, question, carryOverArgs, opts,
+				)
+			},
+		)
 	} else {
 		job.EnqueueRequestIP(
 			ns, *ip, question, carryOverArgs, opts)

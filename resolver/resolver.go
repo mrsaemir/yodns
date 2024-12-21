@@ -750,7 +750,7 @@ func (job *ResolutionJob) receiveWorker(ctx common.Context) {
 
 func (job *ResolutionJob) PickRandomNameServer(
 	nameservers []*model.NameServer,
-	qestion model.Question,
+	question model.Question,
 	opts EnqueueOpts,
 ) *model.NameServer {
 	// TODO: pick the NS with an ip that is not already used 

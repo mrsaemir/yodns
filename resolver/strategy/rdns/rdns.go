@@ -3,7 +3,6 @@ package rdns
 import (
 	"github.com/DNS-MSMT-INET/yodns/client"
 	"github.com/DNS-MSMT-INET/yodns/resolver"
-	commonUtils "github.com/DNS-MSMT-INET/yodns/resolver/common"
 	"github.com/DNS-MSMT-INET/yodns/resolver/model"
 	"github.com/DNS-MSMT-INET/yodns/resolver/strategy/common"
 	"github.com/miekg/dns"
@@ -32,17 +31,7 @@ func (s RDNS) OnInit(job *resolver.ResolutionJob) {
 	)
 }
 
-func (s RDNS) OnStartResolveName(job *resolver.ResolutionJob, sname model.DomainName) {
-	zone, closestEncloser := job.GetClosestEncloser(sname)
-	child := sname.GetAncestor(commonUtils.MinInt(closestEncloser.GetLabelCount()+1, sname.GetLabelCount()))
-	EnqueueRequestForSingleNameServer(
-		job, zone, model.Ask(child, client.TypeNS),
-		common.CarryOverArgs{
-			Zone: zone,
-		},
-		resolver.EnqueueOpts{},
-	)
-}
+func (s RDNS) OnStartResolveName(job *resolver.ResolutionJob, sname model.DomainName) {}
 
 func (s RDNS) OnResponse(job *resolver.ResolutionJob, msgEx model.MessageExchange, ns *model.NameServer, args any) {
 	dnsMsg := msgEx.Message
@@ -85,6 +74,7 @@ func (s RDNS) OnResponse(job *resolver.ResolutionJob, msgEx model.MessageExchang
 	 */
 	 if isFullName && q.Type == dns.TypeNS && (!s.messageAnalyzer.IsOnlyReferralFor(msgEx.Message, q.Name) || q.Name.Equal(cargs.Zone.Name)) {
 		s.Modules.OnFullNameResolved(job, q.Name, cargs.Zone)
+		return
 	}
 
 	// TODO: case 3: CNAME
@@ -112,15 +102,14 @@ func (s RDNS) OnResponse(job *resolver.ResolutionJob, msgEx model.MessageExchang
 		(dnsMsg == nil || (dnsMsg.Rcode != client.RcodeNotZone && dnsMsg.Rcode != client.RcodeNotAuth)) &&
 		(!s.messageAnalyzer.IsOnlyReferral(dnsMsg) || cargs.Zone.HasNameServer(ns))) {
 			for _, name := range job.GetNamesBelow(q.Name) {
-				nextQName := q.Name
-
-				if nextQName.Equal(name) {
-					continue // If the name is fully expanded, we got an actual NXDomain
+				var nextQName model.DomainName
+				if q.Name.Equal(name) {
+					nextQName = q.Name
+				} else {
+					nextQName = name.GetAncestor(q.Name.GetLabelCount() + 1)
 				}
-
-				nextQName = name.GetAncestor(q.Name.GetLabelCount() + 1)
+	
 				nextCargs := cargs
-
 				nextCargs.Zone = job.Root.GetClosestEnclosingZone(nextQName)
 				EnqueueRequestForSingleNameServer(
 					job, nextCargs.Zone, model.Ask(nextQName, client.TypeNS), nextCargs, resolver.EnqueueOpts{})
@@ -143,7 +132,6 @@ func (s RDNS) updateZoneModel(
 	for _, referral := range referrals {
 
 		if !qName.IsSubDomainOf(referral.ZoneName) { // Bogus referral
-			panic("Handle OnBogusReferral!")
 			continue
 		}
 
@@ -172,13 +160,11 @@ func (s RDNS) updateZoneModel(
 	}
 
 	for zone := range createdZones {
-		_ = zone
-		// TODO: handle OnZoneCreated!
+		s.Modules.OnZoneCreated(job, zone)
 	}
 
 	return referredToZones
 }
-
 
 func New() RDNS {
 	return RDNS{

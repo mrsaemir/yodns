@@ -1,8 +1,9 @@
 package model
 
 import (
-	"github.com/DNS-MSMT-INET/yodns/resolver/common"
 	"net/netip"
+
+	"github.com/DNS-MSMT-INET/yodns/resolver/common"
 )
 
 // NameServer represents a dns name server.
@@ -25,6 +26,13 @@ func NewNameServer(name DomainName) *NameServer {
 
 func (ns *NameServer) OnIPAdded(key any, callback func(ip netip.Addr)) {
 	ns.onIPAddedCallbacks[key] = callback
+}
+
+func (ns *NameServer) OnIPAddedOnce(key any, callback func(ip netip.Addr)) {
+	ns.onIPAddedCallbacks[key] = func(ip netip.Addr) {
+		delete(ns.onIPAddedCallbacks, key)
+		callback(ip)
+	}
 }
 
 // AddIPs adds new IPs to the set of addresses of this server.
