@@ -85,38 +85,43 @@ func (s RDNS) OnResponse(job *resolver.ResolutionJob, msgEx model.MessageExchang
 	 * Action:  
 	*/
 	referrals := s.messageAnalyzer.GetReferrals(dnsMsg, q.Type)
-	s.updateZoneModel(job, q.Name, referrals, cargs.Zone, log)
-
+	referredToZones := s.updateZoneModel(job, q.Name, referrals, cargs.Zone, log)
+	s.followReferrals(job, referredToZones, q, cargs)
 	if q.Type != client.TypeNS {
 		return
 	}
 
-	/*
-	 * Case 5:  Non-referral answer for non-full name
-	 * What:  	The name server responded without a referral for the name we queried. It's not necessarily a full name.
-	 * Action:  Continue by asking for the next label.
-	 * Why: 	We don't want to miss any queries. Unless the server clearly indicates,
-	 *          that it is not authoritative for the zone, we continue asking for the next label.
-	*/
-	if (
-		(dnsMsg == nil || (dnsMsg.Rcode != client.RcodeNotZone && dnsMsg.Rcode != client.RcodeNotAuth)) &&
-		(!s.messageAnalyzer.IsOnlyReferral(dnsMsg) || cargs.Zone.HasNameServer(ns))) {
-			for _, name := range job.GetNamesBelow(q.Name) {
-				var nextQName model.DomainName
-				if q.Name.Equal(name) {
-					nextQName = q.Name
-				} else {
-					nextQName = name.GetAncestor(q.Name.GetLabelCount() + 1)
-				}
-	
-				nextCargs := cargs
-				nextCargs.Zone = job.Root.GetClosestEnclosingZone(nextQName)
-				EnqueueRequestForSingleNameServer(
-					job, nextCargs.Zone, model.Ask(nextQName, client.TypeNS), nextCargs, resolver.EnqueueOpts{})
-			}
-	}
+	// TODO: case 5
 }
 
+func (s RDNS) followReferrals(
+	job *resolver.ResolutionJob,
+	referredToZones map[*model.Zone]any,
+	q model.Question,
+	cargs common.CarryOverArgs,
+) {
+	zones := make([]*model.Zone, 0, len(referredToZones))
+	for zone := range referredToZones {
+		zones = append(zones, zone)
+	}
+
+	// These requests are actually advancing the resolution
+	for _, name := range job.GetNamesBelow(q.Name) {		
+		zone := zones[0] // TODO: pick randomly?
+		nextCargs := cargs
+		nextCargs.Zone = zone
+
+		if name.Equal(q.Name) {
+			EnqueueRequestForSingleNameServer(
+				job, zone, model.Ask(q.Name, client.TypeNS), nextCargs, resolver.EnqueueOpts{})
+			continue
+		}
+
+		nextQName := name.GetAncestor(q.Name.GetLabelCount() + 1)
+		EnqueueRequestForSingleNameServer(
+			job, zone, model.Ask(nextQName, client.TypeNS), nextCargs, resolver.EnqueueOpts{})
+	}
+}
 
 func (s RDNS) updateZoneModel(
 	job *resolver.ResolutionJob,
